@@ -15,17 +15,19 @@ export default class NewsItems extends Component {
     category: PropTypes.string,
   };
   //Intializing Constructor to create State for the news component
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       //setting articles as empty in the starting
       articles: [],
       loading: false,
       page: 1,
     };
+    document.title = `${this.props.category} -> NEWS APK`;
   }
   //This function will run after rendering the news
-  componentDidMount = async () => {
+
+  UpadateNews = async () => {
     console.log("Hello i am component didmout");
     let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&apiKey=3a63208ab5f54b399aa7498b98db65f6&pageSize=${this.props.pageSize}&page=${this.state.page}&category=${this.props.category}`;
     //fetching data from News Api in json format
@@ -39,48 +41,25 @@ export default class NewsItems extends Component {
       loading: false,
     });
   };
+  componentDidMount = async () => {
+    this.UpadateNews();
+  };
 
   //writing function for prev click--->
 
   handlePrevClick = async () => {
-    console.log("Hello i am component didmout");
-    let url = `https://newsapi.org/v2/top-headlines?country=${
-      this.props.country
-    }&apiKey=3a63208ab5f54b399aa7498b98db65f6&pageSize=${
-      this.props.pageSize
-    }&page=${this.state.page - 1}&category=${this.props.category}`;
-    //fetching data from News Api in json format
-    this.setState({ loading: true });
-    let Data = await fetch(url);
-    let parsedData = await Data.json();
-    // console.log(parsedData);
-    //setting the state from a null array to the news component and page as prev
     this.setState({
-      articles: parsedData.articles,
       page: this.state.page - 1,
-      loading: false,
     });
+    this.UpadateNews();
   };
 
   //writing function for next click-->
   handleNextClick = async () => {
-    console.log("Hello i am component didmout");
-    let url = `https://newsapi.org/v2/top-headlines?country=${
-      this.props.country
-    }&apiKey=3a63208ab5f54b399aa7498b98db65f6&pageSize=${
-      this.props.pageSize
-    }&page=${this.state.page + 1}&category=${this.props.category}`;
-    this.setState({ loading: true });
-    //fetching data from News Api in json format
-    let Data = await fetch(url);
-    let parsedData = await Data.json();
-    // console.log(parsedData);
-    //setting the state from a null array to the news component and page as prev
     this.setState({
-      articles: parsedData.articles,
       page: this.state.page + 1,
-      loading: false,
     });
+    this.UpadateNews();
   };
   render() {
     return (

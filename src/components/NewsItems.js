@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import NewsComp from "./NewsComp";
 import PropTypes from "prop-types";
+import Spinner from "./Spinner";
 export default class NewsItems extends Component {
   static defaultProps = {
     country: "in",
@@ -28,12 +29,14 @@ export default class NewsItems extends Component {
     console.log("Hello i am component didmout");
     let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&apiKey=3a63208ab5f54b399aa7498b98db65f6&pageSize=${this.props.pageSize}&page=${this.state.page}&category=${this.props.category}`;
     //fetching data from News Api in json format
+    this.setState({ loading: true });
     let Data = await fetch(url);
     let parsedData = await Data.json();
     // console.log(parsedData);
     //setting the state from a null array to the news component
     this.setState({
       articles: parsedData.articles,
+      loading: false,
     });
   };
 
@@ -47,6 +50,7 @@ export default class NewsItems extends Component {
       this.props.pageSize
     }&page=${this.state.page - 1}&category=${this.props.category}`;
     //fetching data from News Api in json format
+    this.setState({ loading: true });
     let Data = await fetch(url);
     let parsedData = await Data.json();
     // console.log(parsedData);
@@ -54,6 +58,7 @@ export default class NewsItems extends Component {
     this.setState({
       articles: parsedData.articles,
       page: this.state.page - 1,
+      loading: false,
     });
   };
 
@@ -65,6 +70,7 @@ export default class NewsItems extends Component {
     }&apiKey=3a63208ab5f54b399aa7498b98db65f6&pageSize=${
       this.props.pageSize
     }&page=${this.state.page + 1}&category=${this.props.category}`;
+    this.setState({ loading: true });
     //fetching data from News Api in json format
     let Data = await fetch(url);
     let parsedData = await Data.json();
@@ -73,27 +79,32 @@ export default class NewsItems extends Component {
     this.setState({
       articles: parsedData.articles,
       page: this.state.page + 1,
+      loading: false,
     });
   };
   render() {
     return (
       <div className="container">
+        <div className="container text-center">
+          {this.state.loading && <Spinner />}
+        </div>
         <div className="row container my-2">
           {/* //Traversing the Json Array of News api */}
-          {this.state.articles.map((element) => {
-            return (
-              <div className="col md-4 my-2" key={element.url}>
-                {" "}
-                {/*Unique key is neccessary*/}
-                <NewsComp
-                  title={element.title}
-                  description={element.description}
-                  imgUrl={element.urlToImage}
-                  urlToNews={element.url}
-                />
-              </div>
-            );
-          })}
+          {!this.state.loading &&
+            this.state.articles.map((element) => {
+              return (
+                <div className="col md-4 my-2" key={element.url}>
+                  {" "}
+                  {/*Unique key is neccessary*/}
+                  <NewsComp
+                    title={element.title}
+                    description={element.description}
+                    imgUrl={element.urlToImage}
+                    urlToNews={element.url}
+                  />
+                </div>
+              );
+            })}
           {/* Adding buttons for Navigation */}
           <div className="container d-flex justify-content-between mx-2">
             <button

@@ -1,7 +1,18 @@
 import React, { Component } from "react";
 import NewsComp from "./NewsComp";
-
+import PropTypes from "prop-types";
 export default class NewsItems extends Component {
+  static defaultProps = {
+    country: "in",
+    pageSize: 6,
+    category: "general",
+  };
+
+  static PropTypes = {
+    country: PropTypes.string,
+    pageSize: PropTypes.number,
+    category: PropTypes.string,
+  };
   //Intializing Constructor to create State for the news component
   constructor() {
     super();
@@ -15,7 +26,7 @@ export default class NewsItems extends Component {
   //This function will run after rendering the news
   componentDidMount = async () => {
     console.log("Hello i am component didmout");
-    let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=3a63208ab5f54b399aa7498b98db65f6&pageSize=${this.props.pageSize}&page=${this.state.page}`;
+    let url = `https://newsapi.org/v2/top-headlines?country=${this.props.country}&apiKey=3a63208ab5f54b399aa7498b98db65f6&pageSize=${this.props.pageSize}&page=${this.state.page}&category=${this.props.category}`;
     //fetching data from News Api in json format
     let Data = await fetch(url);
     let parsedData = await Data.json();
@@ -30,9 +41,11 @@ export default class NewsItems extends Component {
 
   handlePrevClick = async () => {
     console.log("Hello i am component didmout");
-    let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=3a63208ab5f54b399aa7498b98db65f6&pageSize=${
+    let url = `https://newsapi.org/v2/top-headlines?country=${
+      this.props.country
+    }&apiKey=3a63208ab5f54b399aa7498b98db65f6&pageSize=${
       this.props.pageSize
-    }&page=${this.state.page - 1}`;
+    }&page=${this.state.page - 1}&category=${this.props.category}`;
     //fetching data from News Api in json format
     let Data = await fetch(url);
     let parsedData = await Data.json();
@@ -47,9 +60,11 @@ export default class NewsItems extends Component {
   //writing function for next click-->
   handleNextClick = async () => {
     console.log("Hello i am component didmout");
-    let url = `https://newsapi.org/v2/top-headlines?country=in&apiKey=3a63208ab5f54b399aa7498b98db65f6&pageSize=${
+    let url = `https://newsapi.org/v2/top-headlines?country=${
+      this.props.country
+    }&apiKey=3a63208ab5f54b399aa7498b98db65f6&pageSize=${
       this.props.pageSize
-    }&page=${this.state.page + 1}`;
+    }&page=${this.state.page + 1}&category=${this.props.category}`;
     //fetching data from News Api in json format
     let Data = await fetch(url);
     let parsedData = await Data.json();
